@@ -2,7 +2,17 @@ import React, { Component } from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
-import { Layout, Row, Col, Card, Collapse, Tag, Icon, Avatar } from "antd";
+import {
+  Layout,
+  Row,
+  Col,
+  Card,
+  Collapse,
+  Tag,
+  Icon,
+  Avatar,
+  Skeleton
+} from "antd";
 
 import "./index.css";
 const { Content } = Layout;
@@ -14,6 +24,7 @@ const REPOS_QUERY = gql`
       repositories(first: 5, privacy: PUBLIC) {
         nodes {
           name
+          resourcePath
           description
           primaryLanguage {
             name
@@ -75,6 +86,7 @@ query {
       repositories(first: 5, privacy: PUBLIC,${cursor}) {
         nodes {
           name
+          resourcePath
           description
           primaryLanguage {
             name
@@ -93,6 +105,9 @@ query {
               ... on Commit {
                 history {
                   totalCount
+                  nodes {
+                    additions
+                  }
                 }
               }
             }
@@ -137,7 +152,12 @@ query {
     return (
       <Query query={this.state.REPOS_QUERY} variables={{ name }}>
         {({ loading, error, data }) => {
-          if (loading) return "Loading...";
+          if (loading)
+            return (
+              <Card style={{ width: 650,height:352, marginBottom: 16 }}>
+                <Skeleton paragraph={{ rows: 8 }} active />
+              </Card>
+            );
           if (error) return `Error!`;
           const { nodes: repos } = data.user.repositories;
           const {
@@ -149,7 +169,7 @@ query {
           return (
             <Row>
               <Col span={24}>
-                <Card>
+                <Card style={{ width: 650, marginBottom: 16 }}>
                   <div style={{ width: 600, textAlign: "center" }}>
                     <Tag
                       style={{ marginBottom: 8 }}
@@ -199,6 +219,7 @@ query {
                             key={id + 1}
                           >
                             <p>{x.description}</p>
+                            <p>{x.resourcePath}</p>
                             <Row>
                               {x.languages.nodes.map(r => {
                                 return (

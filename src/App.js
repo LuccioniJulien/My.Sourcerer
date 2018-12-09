@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import { Layout } from "antd";
 
 import { PROFIL_QUERY, Profil } from "./widgets/profil";
+import { PIE_QUERY, Pie } from "./widgets/pie";
 import Repos from "./widgets/repos";
 
 import logo from "./logo.svg";
@@ -42,6 +43,7 @@ class App extends Component {
           <Content className="App-content">
             <Profil />
             <Repos />
+            <Pie />
           </Content>
         </Layout>
       </ApolloProvider>

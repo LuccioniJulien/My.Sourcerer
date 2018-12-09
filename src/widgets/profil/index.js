@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import React, { Component } from "react";
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
 
-import { Layout, Row, Col, Card, Avatar, Badge } from "antd";
+import { Layout, Row, Col, Card, Avatar, Badge, Skeleton } from "antd";
 
-import './index.css';
+import "./index.css";
 const { Content } = Layout;
 
 export const PROFIL_QUERY = gql`
-query {
+  query {
     user(login: "LuccioniJulien") {
       avatarUrl
       name
@@ -23,53 +23,85 @@ query {
       contributionsCollection {
         totalCommitContributions
       }
-      repositories(privacy:PUBLIC) {
-        totalCount 
+      repositories(privacy: PUBLIC) {
+        totalCount
       }
     }
   }
 `;
 
 export const Profil = () => (
-    <Query query={PROFIL_QUERY}>
-        {({ loading, error, data }) => {
-            if (loading) return 'Loading...';
-            console.log(error)
-            if (error) return `Error!`;
-            const { avatarUrl, login, contributionsCollection, repositories, followers, following, bio } = data.user
-            return (
-                <Row>
-                    <Col span={24}>
-                        <Card
-                            title="Profil"
-                            style={{ width: 650, marginBottom:16 }}
-                            extra={<a href="#">{login}</a>}
-                        >
-                            <Col span={6}>
-                                <Avatar size={64} src={avatarUrl} />
-                            </Col>
-                            <Col span={5}>
-                                Commits: <Badge style={{ backgroundColor: '#52c41a' }} overflowCount={999} count={contributionsCollection.totalCommitContributions} />
-                                <br />
-                                Repos: <Badge style={{ backgroundColor: '#52c41a' }} overflowCount={999} count={repositories.totalCount} />
-                                <br />
-                                Ligne of code: <Badge style={{ backgroundColor: '#52c41a' }} overflowCount={999} count={repositories.totalCommitContributions} />
-                            </Col>
-                            <Col span={5}>
-                                Followers: <Badge style={{ backgroundColor: '#52c41a' }} overflowCount={999} count={followers.totalCount} />
-                                <br />
-                                Following: <Badge style={{ backgroundColor: '#52c41a' }} overflowCount={999} count={following.totalCount} />
-                                <br />
-                            </Col>
-                            <Col span={5}>
-                                Bio:
-                                <br />
-                                {bio}
-                            </Col>
-                        </Card>
-                    </Col>
-                </Row>
-            );
-        }}
-    </Query>
+  <Query query={PROFIL_QUERY}>
+    {({ loading, error, data }) => {
+      if (loading)
+        return (
+          <Card style={{ width: 650, marginBottom: 16 }}>
+            <Skeleton active />
+          </Card>
+        );
+      if (error) return `Error!`;
+      const {
+        avatarUrl,
+        login,
+        contributionsCollection,
+        repositories,
+        followers,
+        following,
+        bio
+      } = data.user;
+      return (
+        <Row>
+          <Col span={24}>
+            <Card
+              title="Profil"
+              style={{ width: 650, marginBottom: 16 }}
+              extra={<a href="#">{login}</a>}
+            >
+              <Col span={6}>
+                <Avatar size={64} src={avatarUrl} />
+              </Col>
+              <Col span={5}>
+                Commits:{" "}
+                <Badge
+                  style={{ backgroundColor: "#52c41a" }}
+                  overflowCount={999}
+                  count={contributionsCollection.totalCommitContributions}
+                />
+                <br />
+                Repos:{" "}
+                <Badge
+                  style={{ backgroundColor: "#52c41a" }}
+                  overflowCount={999}
+                  count={repositories.totalCount}
+                />
+                <br />
+                Ligne of code: OVER NEIN THOUSAND
+              </Col>
+              <Col span={5}>
+                Followers:{" "}
+                <Badge
+                  style={{ backgroundColor: "#52c41a" }}
+                  overflowCount={999}
+                  count={followers.totalCount}
+                />
+                <br />
+                Following:{" "}
+                <Badge
+                  style={{ backgroundColor: "#52c41a" }}
+                  overflowCount={999}
+                  count={following.totalCount}
+                />
+                <br />
+              </Col>
+              <Col span={5}>
+                Bio:
+                <br />
+                {bio}
+              </Col>
+            </Card>
+          </Col>
+        </Row>
+      );
+    }}
+  </Query>
 );
