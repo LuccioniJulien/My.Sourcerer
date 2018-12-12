@@ -9,6 +9,7 @@ import { Layout } from "antd";
 
 import { PROFIL_QUERY, Profil } from "./widgets/profil";
 import { PIE_QUERY, Pie } from "./widgets/pie";
+import { COLUMN_QUERY, Column } from "./widgets/Column";
 import Repos from "./widgets/repos";
 
 import logo from "./logo.svg";
@@ -44,6 +45,7 @@ class App extends Component {
             <Profil />
             <Repos />
             <Pie />
+            <Column />
           </Content>
         </Layout>
       </ApolloProvider>

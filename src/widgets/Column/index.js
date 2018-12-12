@@ -3,11 +3,14 @@ import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import PieChart from "react-minimal-pie-chart";
 import { Layout, Row, Col, Card, Tag, Skeleton } from "antd";
-
+import ReactChartkick, { ColumnChart } from 'react-chartkick'
+import Chart from 'chart.js'
 import "./index.css";
+
+ReactChartkick.addAdapter(Chart)
 const { Content } = Layout;
 
-export const PIE_QUERY = gql`
+export const COLUMN_QUERY = gql`
   query {
     user(login: "LuccioniJulien") {
       repositories(first: 100) {
@@ -36,8 +39,8 @@ export const PIE_QUERY = gql`
   }
 `;
 
-export const Pie = () => (
-  <Query query={PIE_QUERY}>
+export const Column = () => (
+  <Query query={COLUMN_QUERY}>
     {({ loading, error, data }) => {
       if (loading)
         return (
@@ -70,42 +73,15 @@ export const Pie = () => (
       }
       let series = [];
       for (const key in temp) {
-        const buildObj = {
-          title: key,
-          value: temp[key],
-          color: languages.find(x => x.language == key).color,
-          ratio: ((temp[key] * 100) / total).toFixed(2)
-        };
-        series.push(buildObj);
+        series.push([key,temp[key]]);
       }
       console.log(series);
       return (
         <Row>
           <Col span={24}>
             <Card style={{ width: 650, marginBottom: 16 }}>
-              <Col span={12}>
-                {series.map(x => {
-                  return (
-                    <p>
-                      <Tag
-                        style={{ width: 100, textAlign: "center" }}
-                        color={x.color}
-                      >
-                        {x.title}
-                      </Tag>
-                      <Tag
-                        style={{ width: 60, textAlign: "center" }}
-                        color="blue"
-                      >
-                        {x.ratio} %
-                      </Tag>
-                      <Tag color="blue">loc: {x.value}</Tag>
-                    </p>
-                  );
-                })}
-              </Col>
-              <Col span={12}>
-                <PieChart data={series} animate={true} />
+              <Col span={24}>
+                <ColumnChart data={series} />
               </Col>
             </Card>
           </Col>
