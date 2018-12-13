@@ -2,20 +2,9 @@ import React, { Component } from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
-import {
-  Layout,
-  Row,
-  Col,
-  Card,
-  Collapse,
-  Tag,
-  Icon,
-  Avatar,
-  Skeleton
-} from "antd";
+import { Row, Col, Card, Collapse, Tag, Icon, Avatar, Skeleton } from "antd";
 
 import "./index.css";
-const { Content } = Layout;
 const Panel = Collapse.Panel;
 
 const REPOS_QUERY = gql`
@@ -79,11 +68,11 @@ class Repos extends Component {
 
   componentDidMount() {}
 
-  setCursor(cursor) {
+  setCursor(cursor, position = "first") {
     const NEW_QUERY = gql`
 query {
     user(login: "LuccioniJulien") {
-      repositories(first: 5, privacy: PUBLIC,${cursor}) {
+      repositories(${position}: 5, privacy: PUBLIC,${cursor}) {
         nodes {
           name
           resourcePath
@@ -139,12 +128,12 @@ query {
   }
   handlePreviousClick = cursor => {
     console.log("backward");
-    this.setCursor(`before:"${cursor}"`);
+    this.setCursor(`before:"${cursor}"`, "last");
   };
 
   handleNextClick = cursor => {
     console.log("foward");
-    this.setCursor(`after:"${cursor}"`);
+    this.setCursor(`after:"${cursor}"`,"first");
   };
 
   render() {
@@ -154,7 +143,7 @@ query {
         {({ loading, error, data }) => {
           if (loading)
             return (
-              <Card style={{ width: 650,height:352, marginBottom: 16 }}>
+              <Card style={{ width: 650, height: 352, marginBottom: 16 }}>
                 <Skeleton paragraph={{ rows: 8 }} active />
               </Card>
             );
@@ -175,7 +164,7 @@ query {
                       style={{ marginBottom: 8 }}
                       onClick={() => {
                         if (hasPreviousPage)
-                          this.handlePreviousClick(endCursor);
+                          this.handlePreviousClick(startCursor);
                       }}
                     >
                       <Icon type="up" />
@@ -199,6 +188,7 @@ query {
                         }
                         return (
                           <Panel
+                            key={id + 1}
                             style={{ textAlign: "left" }}
                             header={
                               <>
@@ -216,21 +206,24 @@ query {
                                 {x.name}
                               </>
                             }
-                            key={id + 1}
                           >
                             <p>{x.description}</p>
                             <p>{x.resourcePath}</p>
                             <Row>
-                              {x.languages.nodes.map(r => {
+                              {x.languages.nodes.map((r, id) => {
                                 return (
-                                  <Tag style={{ margin: 8 }} color={r.color}>
+                                  <Tag
+                                    key={id}
+                                    style={{ margin: 8 }}
+                                    color={r.color}
+                                  >
                                     {r.name}
                                   </Tag>
                                 );
                               })}
                             </Row>
                             <Row>
-                              {x.collaborators.nodes.map(c => {
+                              {x.collaborators.nodes.map((c, id) => {
                                 return (
                                   <Col
                                     span={3}
@@ -239,6 +232,7 @@ query {
                                       width: 85,
                                       textAlign: "center"
                                     }}
+                                    key={id}
                                   >
                                     <Row>
                                       <Avatar

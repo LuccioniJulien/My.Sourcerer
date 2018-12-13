@@ -1,11 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
-
-import { Layout, Row, Col, Card, Avatar, Badge, Skeleton } from "antd";
-
+import { Row, Col, Card, Avatar, Badge, Skeleton } from "antd";
 import "./index.css";
-const { Content } = Layout;
 
 export const PROFIL_QUERY = gql`
   query {
@@ -55,7 +52,7 @@ export const Profil = () => (
             <Card
               title="Profil"
               style={{ width: 650, marginBottom: 16 }}
-              extra={<a href="#">{login}</a>}
+              extra={<p>{login}</p>}
             >
               <Col span={6}>
                 <Avatar size={64} src={avatarUrl} />

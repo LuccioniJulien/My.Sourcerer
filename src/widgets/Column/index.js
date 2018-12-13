@@ -1,15 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
-import PieChart from "react-minimal-pie-chart";
-import { Layout, Row, Col, Card, Tag, Skeleton } from "antd";
+import { Row, Col, Card, Skeleton } from "antd";
 import ReactChartkick, { ColumnChart } from 'react-chartkick'
 import Chart from 'chart.js'
 import "./index.css";
 
 ReactChartkick.addAdapter(Chart)
-const { Content } = Layout;
-
 export const COLUMN_QUERY = gql`
   query {
     user(login: "LuccioniJulien") {
@@ -65,17 +62,14 @@ export const Column = () => (
           };
         });
       let temp = {};
-      let total = 0;
       for (const lang of languages) {
         const nb = temp[lang.language] || 0;
         temp[lang.language] = nb + lang["loc"];
-        total += lang["loc"];
       }
       let series = [];
       for (const key in temp) {
         series.push([key,temp[key]]);
       }
-      console.log(series);
       return (
         <Row>
           <Col span={24}>
