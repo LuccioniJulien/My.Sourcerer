@@ -6,10 +6,10 @@ import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { Layout } from "antd";
 
-import {Profil } from "./widgets/profil";
+import { Profil } from "./widgets/profil";
 import { Pie } from "./widgets/pie";
 import { Column } from "./widgets/Column";
-import Repos from "./widgets/repos";
+import { Repos } from "./widgets/repos";
 import "./App.css";
 
 const { Content, Header } = Layout;

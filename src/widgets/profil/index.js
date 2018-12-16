@@ -1,34 +1,11 @@
 import React from "react";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import { Row, Col, Card, Avatar, Badge, Skeleton } from "antd";
+import PROFIL_QUERY from "./query";
 import "./index.css";
 
-export const PROFIL_QUERY = gql`
-  query {
-    user(login: "LuccioniJulien") {
-      avatarUrl
-      name
-      bio
-      login
-      followers {
-        totalCount
-      }
-      following {
-        totalCount
-      }
-      contributionsCollection {
-        totalCommitContributions
-      }
-      repositories(privacy: PUBLIC) {
-        totalCount
-      }
-    }
-  }
-`;
-
 export const Profil = () => (
-  <Query query={PROFIL_QUERY}>
+  <Query query={PROFIL_QUERY} errorPolicy="all">
     {({ loading, error, data }) => {
       if (loading)
         return (

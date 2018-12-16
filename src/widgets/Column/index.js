@@ -1,40 +1,13 @@
 import React from "react";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import { Row, Col, Card, Skeleton } from "antd";
-import ReactChartkick, { ColumnChart } from 'react-chartkick'
-import Chart from 'chart.js'
+import ReactChartkick, { ColumnChart } from "react-chartkick";
+import Chart from "chart.js";
+import COLUMN_QUERY from "./query";
+
 import "./index.css";
 
-ReactChartkick.addAdapter(Chart)
-export const COLUMN_QUERY = gql`
-  query {
-    user(login: "LuccioniJulien") {
-      repositories(first: 100) {
-        nodes {
-          name
-          primaryLanguage {
-            name
-            color
-          }
-          defaultBranchRef {
-            target {
-              ... on Commit {
-                history {
-                  totalCount
-                  nodes {
-                    additions
-                  }
-                }
-              }
-            }
-          }
-        }
-        totalCount
-      }
-    }
-  }
-`;
+ReactChartkick.addAdapter(Chart);
 
 export const Column = () => (
   <Query query={COLUMN_QUERY}>
@@ -54,6 +27,7 @@ export const Column = () => (
           let loc = 0;
           for (const item of l.defaultBranchRef.target.history.nodes) {
             loc += item.additions;
+            loc -= item.deletions;
           }
           return {
             language,
@@ -63,12 +37,11 @@ export const Column = () => (
         });
       let temp = {};
       for (const lang of languages) {
-        const nb = temp[lang.language] || 0;
-        temp[lang.language] = nb + lang["loc"];
+        temp[lang.language] = (temp[lang.language] || 0) + lang["loc"];
       }
       let series = [];
       for (const key in temp) {
-        series.push([key,temp[key]]);
+        series.push([key, temp[key]]);
       }
       return (
         <Row>

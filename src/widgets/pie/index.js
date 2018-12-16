@@ -1,39 +1,10 @@
 import React from "react";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import PieChart from "react-minimal-pie-chart";
 import { Row, Col, Card, Tag, Skeleton } from "antd";
+import PIE_QUERY from "./query";
 
 import "./index.css";
-
-export const PIE_QUERY = gql`
-  query {
-    user(login: "LuccioniJulien") {
-      repositories(first: 100) {
-        nodes {
-          name
-          primaryLanguage {
-            name
-            color
-          }
-          defaultBranchRef {
-            target {
-              ... on Commit {
-                history {
-                  totalCount
-                  nodes {
-                    additions
-                  }
-                }
-              }
-            }
-          }
-        }
-        totalCount
-      }
-    }
-  }
-`;
 
 export const Pie = () => (
   <Query query={PIE_QUERY}>
@@ -53,6 +24,7 @@ export const Pie = () => (
           let loc = 0;
           for (const item of l.defaultBranchRef.target.history.nodes) {
             loc += item.additions;
+            loc -= item.deletions;
           }
           return {
             language,
@@ -84,21 +56,21 @@ export const Pie = () => (
               <Col span={12}>
                 {series.map((x, id) => {
                   return (
-                      <div key={id} style={{marginBottom:8}}>
-                        <Tag
-                          style={{ width: 100, textAlign: "center" }}
-                          color={x.color}
-                        >
-                          {x.title}
-                        </Tag>
-                        <Tag
-                          style={{ width: 60, textAlign: "center" }}
-                          color="blue"
-                        >
-                          {x.ratio} %
-                        </Tag>
-                        <Tag color="blue">loc: {x.value}</Tag>
-                      </div>
+                    <div key={id} style={{ marginBottom: 8 }}>
+                      <Tag
+                        style={{ width: 100, textAlign: "center" }}
+                        color={x.color}
+                      >
+                        {x.title}
+                      </Tag>
+                      <Tag
+                        style={{ width: 60, textAlign: "center" }}
+                        color="blue"
+                      >
+                        {x.ratio} %
+                      </Tag>
+                      <Tag color="blue">loc: {x.value}</Tag>
+                    </div>
                   );
                 })}
               </Col>
