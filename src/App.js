@@ -1,10 +1,12 @@
 import React, { Component } from "react";
+import { Layout, Input, message } from "antd";
+
 import { ApolloClient } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { Layout } from "antd";
+import gql from "graphql-tag";
 
 import { Profil } from "./widgets/profil";
 import { Pie } from "./widgets/pie";
@@ -12,6 +14,7 @@ import { Column } from "./widgets/Column";
 import { Repos } from "./widgets/repos";
 import "./App.css";
 
+const Search = Input.Search;
 const { Content, Header } = Layout;
 
 const httpLink = createHttpLink({
@@ -33,16 +36,56 @@ const client = new ApolloClient({
 });
 
 class App extends Component {
+  state = {
+    userExist: false,
+    userName: null
+  };
+
+  handleClickSearch = login => {
+    client
+      .query({
+        query: gql`
+      query {
+        user(login: ${login}) {
+          name
+          login
+        }
+      }
+      `
+      })
+      .then(result => this.handleResult(result))
+      .catch(result => message.error(result.graphQLErrors[0].message));
+  };
+  handleResult(result) {
+    if (result.errors) {
+      message.error(`This User doesn't exist`);
+      this.setState({ userExist: false, userName: null });
+      return;
+    }
+    this.setState({ userExist: true, userName: result.data.user.login });
+  }
+
   render() {
     return (
       <ApolloProvider client={client}>
         <Header className="App-header">My Sourcerer</Header>
         <Layout>
           <Content className="App-content">
-            <Profil />
-            <Repos />
-            <Pie />
-            <Column />
+            <Search
+              placeholder="input search text"
+              onSearch={this.handleClickSearch}
+              style={{ width: 650, marginBottom: 16 }}
+            />
+            {this.state.userExist ? (
+              <>
+                <Profil user={this.state.userName} />
+                <Repos user={this.state.userName} />
+                <Pie user={this.state.userName} />
+                <Column user={this.state.userName} />
+              </>
+            ) : (
+              ""
+            )}
           </Content>
         </Layout>
       </ApolloProvider>

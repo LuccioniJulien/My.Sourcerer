@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export default gql`
-  query($endCursor: String, $startCursor: String, $first: Int, $last: Int) {
-    user(login: ${process.env.REACT_APP_USER}) {
+  query($endCursor: String, $startCursor: String, $first: Int, $last: Int,$name: String!) {
+    user(login: $name) {
       avatarUrl
       login
       repositories(first: $first,last: $last, after: $endCursor,before: $startCursor) {

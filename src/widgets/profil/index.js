@@ -4,8 +4,8 @@ import { Row, Col, Card, Avatar, Badge, Skeleton } from "antd";
 import PROFIL_QUERY from "./query";
 import "./index.css";
 
-export const Profil = () => (
-  <Query query={PROFIL_QUERY} errorPolicy="all">
+export const Profil = name => (
+  <Query query={PROFIL_QUERY} errorPolicy="all" variables={name}>
     {({ loading, error, data }) => {
       if (loading)
         return (

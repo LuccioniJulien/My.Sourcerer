@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export default  gql`
-query {
-  user(login: ${process.env.REACT_APP_USER}) {
+query($user: String!) {
+  user(login: $user) {
     avatarUrl
     name
     bio

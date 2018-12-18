@@ -6,8 +6,8 @@ import PIE_QUERY from "./query";
 
 import "./index.css";
 
-export const Pie = () => (
-  <Query query={PIE_QUERY}>
+export const Pie = (name) => (
+  <Query query={PIE_QUERY} variables={name}>
     {({ loading, error, data }) => {
       if (loading)
         return (

@@ -9,8 +9,8 @@ import "./index.css";
 
 ReactChartkick.addAdapter(Chart);
 
-export const Column = () => (
-  <Query query={COLUMN_QUERY}>
+export const Column = name => (
+  <Query query={COLUMN_QUERY} variables={name}>
     {({ loading, error, data }) => {
       if (loading)
         return (
