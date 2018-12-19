@@ -12,7 +12,6 @@
 .env
 .vscode
 package-lock.json
-*.vscode
 
 # misc
 .DS_Store
