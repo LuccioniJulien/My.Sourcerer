@@ -6,16 +6,24 @@ import PIE_QUERY from "./query";
 
 import "./index.css";
 
-export const Pie = (name) => (
-  <Query query={PIE_QUERY} variables={name}>
-    {({ loading, error, data }) => {
+export const Pie = ({ user }) => (
+  <Query query={PIE_QUERY} variables={{ user,nb:90 }}>
+    {({ loading, error, data, fetchMore }) => {
       if (loading)
         return (
           <Card style={{ width: 650, marginBottom: 16 }}>
             <Skeleton active />
           </Card>
         );
-      if (error) return `${error}!`;
+      if (error) {
+        return (
+          <Card style={{ width: 650, marginBottom: 16 }}>
+            <p>Upssss...</p>
+            <p>It must be a CORS errors</p>
+            <p>Try an another user and retry with the user "{user}" after</p>
+          </Card>
+        );
+      }
       const { nodes: repos } = data.user.repositories;
       const languages = repos
         .filter(l => l.primaryLanguage && l.defaultBranchRef)

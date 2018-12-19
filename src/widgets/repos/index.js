@@ -6,7 +6,6 @@ import REPOS_QUERY from "./query";
 const Panel = Collapse.Panel;
 
 export const Repos = ({ user: name }) => {
-  console.log(name);
   const variables = {
     name,
     startCursor: null,
@@ -25,7 +24,6 @@ export const Repos = ({ user: name }) => {
           );
         if (error) {
           if (!data) {
-            console.log(error);
             return "Error !!";
           }
         }
@@ -37,7 +35,6 @@ export const Repos = ({ user: name }) => {
           hasNextPage,
           hasPreviousPage
         } = data.user.repositories.pageInfo;
-        console.log(repos)
         return (
           <Row>
             <Col span={24}>

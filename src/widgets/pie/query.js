@@ -1,9 +1,9 @@
 import gql from "graphql-tag";
 
 export default gql`
-query($user: String!) {
+query($user: String!,$nb :Int!) {
   user(login: $user){
-    repositories(first: 100) {
+    repositories(first: $nb) {
       nodes {
         name
         primaryLanguage {

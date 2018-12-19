@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Layout, Input, message } from "antd";
+import { Layout, Input, message, notification } from "antd";
 
 import { ApolloClient } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
@@ -37,8 +37,7 @@ const client = new ApolloClient({
 
 class App extends Component {
   state = {
-    userExist: false,
-    userName: null
+    userName: "LuccioniJulien"
   };
 
   handleClickSearch = login => {
@@ -59,10 +58,30 @@ class App extends Component {
   handleResult(result) {
     if (result.errors) {
       message.error(`This User doesn't exist`);
-      this.setState({ userExist: false, userName: null });
+      this.setState({ userName: null });
       return;
     }
-    this.setState({ userExist: true, userName: result.data.user.login });
+    localStorage.setItem("user", result.data.user.login);
+    this.setState({ userName: result.data.user.login });
+  }
+
+  componentDidMount() {
+    const userName = localStorage.getItem("user");
+    if (userName) {
+      this.setState({ userName });
+    }
+    notification.open({
+      message: "CORS error",
+      duration: 10,
+      description: (
+        <>
+          <p>If a CORS error occure</p>
+          <p>just refresh the page with:</p>
+          <p>cmd + r</p>
+          <p>if this doesn't work you should open issue for github dev team APIV4</p>
+        </>
+      )
+    });
   }
 
   render() {
@@ -72,11 +91,11 @@ class App extends Component {
         <Layout>
           <Content className="App-content">
             <Search
-              placeholder="input search text"
+              placeholder="search another user with login"
               onSearch={this.handleClickSearch}
               style={{ width: 650, marginBottom: 16 }}
             />
-            {this.state.userExist ? (
+            {this.state.userName ? (
               <>
                 <Profil user={this.state.userName} />
                 <Repos user={this.state.userName} />
