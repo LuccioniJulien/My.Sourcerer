@@ -4,13 +4,16 @@
 /node_modules
 /.pnp
 .pnp.js
-package-lock.json
 # testing
 /coverage
 
 # production
 /build
 .env
+.vscode
+package-lock.json
+*.vscode
+
 # misc
 .DS_Store
 .env.local
