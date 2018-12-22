@@ -24,7 +24,16 @@ export const Repos = ({ user: name }) => {
           );
         if (error) {
           if (!data) {
-            return "Error !!";
+            if (error) {
+              return (
+                <Card style={{ width: 650, marginBottom: 16 }}>
+                  <p>Upssss...</p>
+                  <p>It must be a CORS errors</p>
+                  <p>Error:</p>
+                  <p>{`${error}`}</p>
+                </Card>
+              );
+            }
           }
         }
         const { nodes: repos } = data.user.repositories;
@@ -88,7 +97,7 @@ export const Repos = ({ user: name }) => {
                           header={
                             <>
                               <Tag color={x.primaryLanguage.color}>
-                                <div style={{ width: 70, textAlign: "center" }}>
+                                <div style={{ width: 120, textAlign: "center" }}>
                                   {x.primaryLanguage.name}
                                 </div>
                               </Tag>

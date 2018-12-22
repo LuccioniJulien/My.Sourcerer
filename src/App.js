@@ -41,6 +41,7 @@ class App extends Component {
   };
 
   handleClickSearch = login => {
+    this.setState({ userName: null})
     client
       .query({
         query: gql`
@@ -66,19 +67,18 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const userName = localStorage.getItem("user");
-    if (userName) {
-      this.setState({ userName });
-    }
+    // const userName = localStorage.getItem("user");
+    // if (userName) {
+    //   this.setState({ userName });
+    // }
     notification.open({
       message: "CORS error",
       duration: 10,
       description: (
         <>
-          <p>If a CORS error occure</p>
+          <p>If a CORS error occure on the first launch</p>
           <p>just refresh the page with:</p>
           <p>cmd + r</p>
-          <p>if this doesn't work you should open issue for github dev team APIV4</p>
         </>
       )
     });

@@ -3,11 +3,11 @@ import { Query } from "react-apollo";
 import PieChart from "react-minimal-pie-chart";
 import { Row, Col, Card, Tag, Skeleton } from "antd";
 import PIE_QUERY from "./query";
-
+import getLoc from "../../helper";
 import "./index.css";
 
 export const Pie = ({ user }) => (
-  <Query query={PIE_QUERY} variables={{ user,nb:90 }}>
+  <Query query={PIE_QUERY} variables={{ user, nb: 90 }}>
     {({ loading, error, data, fetchMore }) => {
       if (loading)
         return (
@@ -20,40 +20,20 @@ export const Pie = ({ user }) => (
           <Card style={{ width: 650, marginBottom: 16 }}>
             <p>Upssss...</p>
             <p>It must be a CORS errors</p>
-            <p>Try an another user and retry with the user "{user}" after</p>
+            <p>Error:</p>
+            <p>{`${error}`}</p>
           </Card>
         );
       }
       const { nodes: repos } = data.user.repositories;
-      const languages = repos
-        .filter(l => l.primaryLanguage && l.defaultBranchRef)
-        .map(l => {
-          const { name: language, color } = l.primaryLanguage;
-          let loc = 0;
-          for (const item of l.defaultBranchRef.target.history.nodes) {
-            loc += item.additions;
-            loc -= item.deletions;
-          }
-          return {
-            language,
-            loc,
-            color
-          };
-        });
-      let temp = {};
-      let total = 0;
-      for (const lang of languages) {
-        const nb = temp[lang.language] || 0;
-        temp[lang.language] = nb + lang["loc"];
-        total += lang["loc"];
-      }
+      const { total, languages, langDictionnary } = getLoc(repos);
       let series = [];
-      for (const key in temp) {
+      for (const key in langDictionnary) {
         const buildObj = {
           title: key,
-          value: temp[key],
+          value: langDictionnary[key],
           color: languages.find(x => x.language === key).color,
-          ratio: ((temp[key] * 100) / total).toFixed(2)
+          ratio: ((langDictionnary[key] * 100) / total).toFixed(2)
         };
         series.push(buildObj);
       }
@@ -66,7 +46,7 @@ export const Pie = ({ user }) => (
                   return (
                     <div key={id} style={{ marginBottom: 8 }}>
                       <Tag
-                        style={{ width: 100, textAlign: "center" }}
+                        style={{ width: 120, textAlign: "center" }}
                         color={x.color}
                       >
                         {x.title}

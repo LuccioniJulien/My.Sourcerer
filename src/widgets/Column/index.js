@@ -4,6 +4,7 @@ import { Row, Col, Card, Skeleton } from "antd";
 import ReactChartkick, { ColumnChart } from "react-chartkick";
 import Chart from "chart.js";
 import COLUMN_QUERY from "./query";
+import getLoc from "../../helper";
 
 import "./index.css";
 
@@ -18,30 +19,21 @@ export const Column = name => (
             <Skeleton active />
           </Card>
         );
-      if (error) return `${error}!`;
-      const { nodes: repos } = data.user.repositories;
-      const languages = repos
-        .filter(l => l.primaryLanguage && l.defaultBranchRef)
-        .map(l => {
-          const { name: language, color } = l.primaryLanguage;
-          let loc = 0;
-          for (const item of l.defaultBranchRef.target.history.nodes) {
-            loc += item.additions;
-            loc -= item.deletions;
-          }
-          return {
-            language,
-            loc,
-            color
-          };
-        });
-      let temp = {};
-      for (const lang of languages) {
-        temp[lang.language] = (temp[lang.language] || 0) + lang["loc"];
+      if (error) {
+        return (
+          <Card style={{ width: 650, marginBottom: 16 }}>
+            <p>Upssss...</p>
+            <p>It must be a CORS errors</p>
+            <p>Error:</p>
+            <p>{`${error}`}</p>
+          </Card>
+        );
       }
+      const { nodes: repos } = data.user.repositories;
+      const { langDictionnary } = getLoc(repos);
       let series = [];
-      for (const key in temp) {
-        series.push([key, temp[key]]);
+      for (const key in langDictionnary) {
+        series.push([key, langDictionnary[key]]);
       }
       return (
         <Row>

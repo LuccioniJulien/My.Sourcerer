@@ -2,6 +2,7 @@ import React from "react";
 import { Query } from "react-apollo";
 import { Row, Col, Card, Avatar, Badge, Skeleton } from "antd";
 import PROFIL_QUERY from "./query";
+import getLoc from "../../helper";
 import "./index.css";
 
 export const Profil = name => (
@@ -13,7 +14,16 @@ export const Profil = name => (
             <Skeleton active />
           </Card>
         );
-      if (error) return `Error!`;
+      if (error) {
+        return (
+          <Card style={{ width: 650, marginBottom: 16 }}>
+            <p>Upssss...</p>
+            <p>It must be a CORS errors</p>
+            <p>Error:</p>
+            <p>{`${error}`}</p>
+          </Card>
+        );
+      }
       const {
         avatarUrl,
         login,
@@ -23,6 +33,8 @@ export const Profil = name => (
         following,
         bio
       } = data.user;
+      const { nodes: repos } = data.user.repositories;
+      const { total } = getLoc(repos);
       return (
         <Row>
           <Col span={24}>
@@ -49,7 +61,12 @@ export const Profil = name => (
                   count={repositories.totalCount}
                 />
                 <br />
-                Ligne of code: OVER NEIN THOUSAND
+                Ligne of code:{" "}
+                <Badge
+                  style={{ backgroundColor: "#52c41a" }}
+                  overflowCount={9999999}
+                  count={total}
+                />
               </Col>
               <Col span={5}>
                 Followers:{" "}

@@ -16,8 +16,27 @@ query($user: String!) {
     contributionsCollection {
       totalCommitContributions
     }
-    repositories(privacy: PUBLIC) {
+    repositories(first:100,privacy: PUBLIC) {
       totalCount
+      nodes{
+        primaryLanguage {
+          name
+          color
+        }
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              history {
+                totalCount
+                nodes {
+                  additions
+                  deletions
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
