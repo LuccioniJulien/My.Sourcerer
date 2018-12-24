@@ -37,13 +37,14 @@ export const Column = name => (
       }
       return (
         <Row>
-          <Col span={24}>
-            <Card style={{ width: 650, marginBottom: 16 }}>
-              <Col span={24}>
-                <ColumnChart data={series} />
-              </Col>
-            </Card>
-          </Col>
+          <Card
+            title="Column chart, ligne of code by primary language"
+            style={{ width: 650, marginBottom: 16 }}
+          >
+            <Col span={24}>
+              <ColumnChart data={series} />
+            </Col>
+          </Card>
         </Row>
       );
     }}

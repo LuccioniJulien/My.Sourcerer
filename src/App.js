@@ -54,7 +54,7 @@ class App extends Component {
       `
       })
       .then(result => this.handleResult(result))
-      .catch(result => message.error(result.graphQLErrors[0].message));
+      .catch(result => message.error("error : " + result.graphQLErrors[0].message));
   };
   handleResult(result) {
     if (result.errors) {

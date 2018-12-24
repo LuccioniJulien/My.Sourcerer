@@ -39,34 +39,35 @@ export const Pie = ({ user }) => (
       }
       return (
         <Row>
-          <Col span={24}>
-            <Card style={{ width: 650, marginBottom: 16 }}>
-              <Col span={12}>
-                {series.map((x, id) => {
-                  return (
-                    <div key={id} style={{ marginBottom: 8 }}>
-                      <Tag
-                        style={{ width: 120, textAlign: "center" }}
-                        color={x.color}
-                      >
-                        {x.title}
-                      </Tag>
-                      <Tag
-                        style={{ width: 60, textAlign: "center" }}
-                        color="blue"
-                      >
-                        {x.ratio} %
-                      </Tag>
-                      <Tag color="blue">loc: {x.value}</Tag>
-                    </div>
-                  );
-                })}
-              </Col>
-              <Col span={12}>
-                <PieChart data={series} animate={true} />
-              </Col>
-            </Card>
-          </Col>
+          <Card
+            title="Pie chart, ligne of code by primary language"
+            style={{ width: 650, marginBottom: 16 }}
+          >
+            <Col span={12}>
+              {series.map((x, id) => {
+                return (
+                  <div key={id} style={{ marginBottom: 8 }}>
+                    <Tag
+                      style={{ width: 120, textAlign: "center" }}
+                      color={x.color}
+                    >
+                      {x.title}
+                    </Tag>
+                    <Tag
+                      style={{ width: 60, textAlign: "center" }}
+                      color="blue"
+                    >
+                      {x.ratio} %
+                    </Tag>
+                    <Tag color="blue">loc: {x.value}</Tag>
+                  </div>
+                );
+              })}
+            </Col>
+            <Col span={12}>
+              <PieChart data={series} animate={true} />
+            </Col>
+          </Card>
         </Row>
       );
     }}
